@@ -9,6 +9,9 @@ const select = {
   containerOf: {
     books: '.books-list',
   },
+  imageWrapper: {
+    images: '.book__image',
+  },
 };
 
 const templates = {
@@ -32,10 +35,33 @@ function render() {
       image: book.image,
     });
     /* creating a DOM element */
-    const e = utils.createDOMFromHTML(generatedHTML);
+    const element = utils.createDOMFromHTML(generatedHTML);
     // creating a DOM element from HTML code
-    books.appendChild(e);
+    books.appendChild(element);
   }
 }
 
 render();
+
+const favoriteBooks = []; //Add an empty array
+
+// Add the initActions function
+function initActions() {
+  /**In it, prepare a reference to the list of all .book__image items in the .booksList */
+  const images = document.querySelectorAll(select.imageWrapper.images);
+
+  /**Then go through each item in that list. */
+  for (const image of images) {
+    /**For each item in that list, add an addEventListener that will trigger a function when detected that will run... */
+    image.addEventListener('dblclick', function (e) {
+      e.preventDefault();//block default browser action (preventDefault)
+
+      image.classList.toggle('favorite');//removes/adds the 'favorite' class to the clicked item (toggle)
+
+      const dataId = image.getAttribute('data-id');//will fetch the id of the book from its 'data-id'
+
+      favoriteBooks.push(dataId);//will add this ID to favoriteBooks[]
+    });
+  }
+}
+initActions();
