@@ -94,17 +94,17 @@
       /**Add a listener that waits for the clicked item (event.target), paying attention to its parent (offsetParent)*/
       thisBooks.bookContainer.addEventListener('dblclick', function (e) {
         e.preventDefault(); //block default browser action (preventDefault)
-        const image = e.target.offsetParent;
+        const clickedBook = e.target.offsetParent;
 
-        const dataId = image.getAttribute('data-id');
+        const dataId = clickedBook.getAttribute('data-id');
 
         if (!thisBooks.favoriteBooks.includes(dataId)) {
-          image.classList.add(classNames.class.favorite); //removes/adds the 'favorite' class
+          clickedBook.classList.add(classNames.class.favorite); //removes/adds the 'favorite' class
           thisBooks.favoriteBooks.push(dataId); //will add this ID to favoriteBooks[]
         } else {
           const indexOfBooks = thisBooks.favoriteBooks.indexOf(dataId); //download index
           thisBooks.favoriteBooks.splice(indexOfBooks, 1); //remove id
-          image.classList.remove(classNames.class.favorite); //removes/adds the 'favorite' class
+          clickedBook.classList.remove(classNames.class.favorite); //removes/adds the 'favorite' class
         }
       });
 
@@ -136,22 +136,22 @@
     filterBooks() {
       const thisBooks = this;
 
-      for (let book of thisBooks.booksData) {
+      for (let bookData of thisBooks.booksData) {
         let shouldBeHidden = false;
-        const hiddenBooks = document.querySelector(
-          select.containerOf.images + '[data-id = "' + book.id + '"]'
+        const book = document.querySelector(
+          select.containerOf.images + '[data-id = "' + bookData.id + '"]'
         );
 
         for (let filter of thisBooks.filters) {
-          if (!book.details[filter]) {
+          if (!bookData.details[filter]) {
             shouldBeHidden = true;
             break;
           }
         }
         if (shouldBeHidden) {
-          hiddenBooks.classList.add(classNames.class.hidden);
+          book.classList.add(classNames.class.hidden);
         } else {
-          hiddenBooks.classList.remove(classNames.class.hidden);
+          book.classList.remove(classNames.class.hidden);
         }
       }
     }
