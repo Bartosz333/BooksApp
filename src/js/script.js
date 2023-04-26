@@ -11,13 +11,30 @@
       filters: '.filters',
     },
   };
+
+  const classNames = {
+    class: {
+      favorite: 'favorite',
+      hidden: 'hidden',
+    },
+  };
+
+  const settings = {
+    ratings: {
+      rating1: 'linear-gradient(to bottom,  #fefcea 0%, #f1da36 100%)', // Rating < 6
+      rating2: 'linear-gradient(to bottom, #b4df5b 0%,#b4df5b 100%)', // Rating > 6 && <= 8
+      rating3: 'linear-gradient(to bottom, #299a0b 0%, #299a0b 100%)', // Rating > 8 && <= 9
+      rating4: 'linear-gradient(to bottom, #ff0084 0%,#ff0084 100%)', // Rating > 9
+    },
+  };
+
   // reference to template and list
   const templates = {
     templateBooks: Handlebars.compile(
       document.querySelector(select.templateOf.booksProduct).innerHTML
     ),
   };
-  class Books {
+  class BooksList {
     constructor() {
       const thisBooks = this;
 
@@ -25,6 +42,7 @@
       thisBooks.getElement();
       thisBooks.render();
       thisBooks.initActions();
+      thisBooks.determineRatingBgc();
     }
 
     initData() {
@@ -47,6 +65,9 @@
       const thisBooks = this;
 
       for (let book of thisBooks.booksData) {
+        const ratingBgc = thisBooks.determineRatingBgc(book.rating);
+        const ratingWidth = book.rating * 10;
+
         /* generating HTML code based on a template and data about a specific book. */
         const generatedHTML = templates.templateBooks({
           id: book.id,
@@ -56,6 +77,8 @@
           image: book.image,
           details: book.details.adults,
           nonFiction: book.details.nonFiction,
+          ratingBgc: ratingBgc,
+          ratingWidth: ratingWidth,
         });
         /* creating a DOM element */
         const element = utils.createDOMFromHTML(generatedHTML);
@@ -76,12 +99,12 @@
         const dataId = image.getAttribute('data-id');
 
         if (!thisBooks.favoriteBooks.includes(dataId)) {
-          image.classList.add('favorite'); //removes/adds the 'favorite' class
+          image.classList.add(classNames.class.favorite); //removes/adds the 'favorite' class
           thisBooks.favoriteBooks.push(dataId); //will add this ID to favoriteBooks[]
         } else {
           const indexOfBooks = thisBooks.favoriteBooks.indexOf(dataId); //download index
           thisBooks.favoriteBooks.splice(indexOfBooks, 1); //remove id
-          image.classList.remove('favorite'); //removes/adds the 'favorite' class
+          image.classList.remove(classNames.class.favorite); //removes/adds the 'favorite' class
         }
       });
 
@@ -110,27 +133,44 @@
       });
     }
 
-    filterBooks () {
+    filterBooks() {
       const thisBooks = this;
 
-      for(let book of thisBooks.booksData) {
+      for (let book of thisBooks.booksData) {
         let shouldBeHidden = false;
-        const hiddenBooks = document.querySelector(select.containerOf.images + '[data-id = "' + book.id + '"]');
+        const hiddenBooks = document.querySelector(
+          select.containerOf.images + '[data-id = "' + book.id + '"]'
+        );
 
-        for(let filter of thisBooks.filters ) {
-          if(!book.details[filter]) {
+        for (let filter of thisBooks.filters) {
+          if (!book.details[filter]) {
             shouldBeHidden = true;
             break;
           }
         }
-        if(shouldBeHidden) { 
-          hiddenBooks.classList.add('hidden');
+        if (shouldBeHidden) {
+          hiddenBooks.classList.add(classNames.class.hidden);
         } else {
-          hiddenBooks.classList.remove('hidden');
+          hiddenBooks.classList.remove(classNames.class.hidden);
         }
       }
+    }
 
+    determineRatingBgc(rating) {
+      let background = '';
+
+      if (rating < 6) {
+        background = settings.ratings.rating1;
+      } else if (rating > 6 && rating <= 8) {
+        background = settings.ratings.rating2;
+      } else if (rating > 8 && rating <= 9) {
+        background = settings.ratings.rating3;
+      } else if (rating > 9) {
+        background = settings.ratings.rating4;
+      }
+      return background;
     }
   }
-  new Books();
+  const app = new BooksList();
+  console.log(app);
 }
