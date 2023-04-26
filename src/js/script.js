@@ -95,7 +95,7 @@
           clickedElement.type == 'checkbox' &&
           clickedElement.name == 'filter'
         ) {
-          console.log('clickedElement', clickedElement.valuebooksFilter);
+          console.log('clickedElement', clickedElement.value);
 
           if (clickedElement.checked) {
             thisBooks.filters.push(clickedElement.value);
@@ -106,8 +106,30 @@
             thisBooks.filters.splice(indexOfValue, 1);
           }
         }
-        
+        thisBooks.filterBooks();
       });
+    }
+
+    filterBooks () {
+      const thisBooks = this;
+
+      for(let book of thisBooks.booksData) {
+        let shouldBeHidden = false;
+        const hiddenBooks = document.querySelector(select.containerOf.images + '[data-id = "' + book.id + '"]');
+
+        for(let filter of thisBooks.filters ) {
+          if(!book.details[filter]) {
+            shouldBeHidden = true;
+            break;
+          }
+        }
+        if(shouldBeHidden) { 
+          hiddenBooks.classList.add('hidden');
+        } else {
+          hiddenBooks.classList.remove('hidden');
+        }
+      }
+
     }
   }
   new Books();
