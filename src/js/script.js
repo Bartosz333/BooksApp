@@ -13,10 +13,8 @@
   };
 
   const classNames = {
-    class: {
-      favorite: 'favorite',
-      hidden: 'hidden',
-    },
+    favorite: 'favorite',
+    hidden: 'hidden',
   };
 
   const settings = {
@@ -99,12 +97,12 @@
         const dataId = clickedBook.getAttribute('data-id');
 
         if (!thisBooks.favoriteBooks.includes(dataId)) {
-          clickedBook.classList.add(classNames.class.favorite); //removes/adds the 'favorite' class
+          clickedBook.classList.add(classNames.favorite); //removes/adds the 'favorite' class
           thisBooks.favoriteBooks.push(dataId); //will add this ID to favoriteBooks[]
         } else {
           const indexOfBooks = thisBooks.favoriteBooks.indexOf(dataId); //download index
           thisBooks.favoriteBooks.splice(indexOfBooks, 1); //remove id
-          clickedBook.classList.remove(classNames.class.favorite); //removes/adds the 'favorite' class
+          clickedBook.classList.remove(classNames.favorite); //removes/adds the 'favorite' class
         }
       });
 
@@ -149,9 +147,9 @@
           }
         }
         if (shouldBeHidden) {
-          book.classList.add(classNames.class.hidden);
+          book.classList.add(classNames.hidden);
         } else {
-          book.classList.remove(classNames.class.hidden);
+          book.classList.remove(classNames.hidden);
         }
       }
     }
